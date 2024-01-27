@@ -9,7 +9,7 @@ petsRouter
   .post(petsController.createPet)
   .get(petsController.getPets);
 
-petsController
+petsRouter
   .route('/:id')
   .get(petsController.getPetById)
   .patch(petsController.updatePetById)
