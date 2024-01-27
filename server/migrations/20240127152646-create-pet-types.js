@@ -12,17 +12,17 @@ module.exports = {
       type: {
         type: Sequelize.STRING(64),
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
     });
   },
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('PetTypes');
+    await queryInterface.dropTable('pet_types');
   },
 };
