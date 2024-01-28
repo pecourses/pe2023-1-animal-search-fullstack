@@ -1,11 +1,13 @@
+import { useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { connect } from 'react-redux';
+import { createPetThunk, getTypesThunk } from '../../store/slices/petsSlice';
 
 const CITIES = ['Kyiv', 'Dnipro', 'New York'];
 
 // TODO VALIDATION
 
-function PetForm ({ petTypes }) {
+function PetForm ({ petTypes, getTypes, createPet }) {
   const initialValues = {
     name: '',
     owner: '',
@@ -17,9 +19,13 @@ function PetForm ({ petTypes }) {
   };
 
   const handleSubmit = (values, formikBag) => {
-    console.log('values :>> ', values);
+    createPet(values);
     formikBag.resetForm();
   };
+
+  useEffect(() => {
+    getTypes();
+  }, []);
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -92,4 +98,9 @@ function PetForm ({ petTypes }) {
 
 const mapStateToProps = ({ petsData: { petTypes } }) => ({ petTypes });
 
-export default connect(mapStateToProps)(PetForm);
+const mapDispatchToProps = dispatch => ({
+  getTypes: () => dispatch(getTypesThunk()),
+  createPet: values => dispatch(createPetThunk(values)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PetForm);
