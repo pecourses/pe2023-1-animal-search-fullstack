@@ -1,10 +1,11 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import { connect } from 'react-redux';
 
 const CITIES = ['Kyiv', 'Dnipro', 'New York'];
 
 // TODO VALIDATION
 
-function PetForm () {
+function PetForm ({ petTypes }) {
   const initialValues = {
     name: '',
     owner: '',
@@ -12,7 +13,7 @@ function PetForm () {
     description: '',
     city: CITIES[0],
     lostDate: '',
-    petTypeId: '1',
+    petTypeId: petTypes[0]?.id ?? '',
   };
 
   const handleSubmit = (values, formikBag) => {
@@ -65,22 +66,23 @@ function PetForm () {
             ))}
           </select>
           <br />
-          <label>Pet`s type:</label>
-          <select
-            name='petTypeId'
-            value={formikProps.values.petTypeId}
-            onChange={formikProps.handleChange}
-          >
-            {[
-              { id: '1', type: 'parrot' },
-              { id: '2', type: 'cat' },
-            ].map(t => (
-              <option key={t.id} value={t.id}>
-                {t.type}
-              </option>
-            ))}
-          </select>
-          <br />
+          {petTypes.length !== 0 && (
+            <>
+              <label>Pet`s type:</label>
+              <select
+                name='petTypeId'
+                value={formikProps.values.petTypeId}
+                onChange={formikProps.handleChange}
+              >
+                {petTypes.map(t => (
+                  <option key={t.id} value={t.id}>
+                    {t.type}
+                  </option>
+                ))}
+              </select>
+              <br />
+            </>
+          )}
           <button type='submit'>Add</button>
         </Form>
       )}
@@ -88,4 +90,6 @@ function PetForm () {
   );
 }
 
-export default PetForm;
+const mapStateToProps = ({ petsData: { petTypes } }) => ({ petTypes });
+
+export default connect(mapStateToProps)(PetForm);
