@@ -9,19 +9,21 @@ import {
 function PetsList ({
   pets,
   petTypes,
-  filter: { petType },
+  filter,
   isFetching,
   error,
   getTypes,
   getPets,
   changePetType,
 }) {
+  const { petType } = filter;
+
   useEffect(() => {
     getTypes();
   }, []);
 
   useEffect(() => {
-    getPets();
+    getPets(filter);
   }, [petType]);
 
   // TODO error, isFetching
@@ -29,8 +31,9 @@ function PetsList ({
     <>
       <section>
         {petTypes.map(t => (
-          <label>
+          <label key={t.id}>
             <input
+              checked={petType == t.id}
               type='radio'
               name='petType'
               value={t.id}
@@ -63,7 +66,7 @@ function PetsList ({
 const mapStateToProps = ({ petsData }) => petsData;
 
 const mapDispathToProps = dispatch => ({
-  getPets: () => dispatch(getPetsThunk()),
+  getPets: data => dispatch(getPetsThunk(data)),
   getTypes: () => dispatch(getTypesThunk()),
   changePetType: data => dispatch(changePetTypeFilter(data)),
 });
